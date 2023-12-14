@@ -26,14 +26,14 @@ embedding_list = [] # list of embeding matrix after conversion from cropped face
 for img, idx in loader:
     face, prob = mtcnn(img, return_prob=True)
     # face, prob = yolov5.dect_img_one_output(img)
-    print("第",idx,"张图片置信度为：",prob)
+    print("第",idx,"种图片置信度为：",prob)
     if face is not None and prob>0.90: # if face detected and porbability > 90%
         emb = resnet(face.unsqueeze(0)) # passing cropped face into resnet model to get embedding matrix
         embedding_list.append(emb.detach()) # resulten embedding matrix is stored in a list
         name_list.append(idx_to_class[idx]) # names are stored in a list
 
 data = [embedding_list, name_list]
-# torch.save(data, 'facenet.pt') # saving data.pt file
+torch.save(data, 'facenet2.pt') # saving data.pt file
 
 print("共计处理",len(loader),"张图片,选择了",len(embedding_list),"张图片置信度满足条件进行留存！")
 

@@ -1,3 +1,5 @@
+import argparse
+
 import torch
 from facenet_pytorch import MTCNN, InceptionResnetV1
 from torchvision import datasets
@@ -248,7 +250,42 @@ class yolov5_FaceDetection:
         else:
             self.dect_video()
 
-image_path = "data/test_img/many_people.jpg"
-image = Image.open(image_path)
-yolov5 = yolov5_FaceDetection(capture_index=-1, model_name='yolov5.pt', image=image)  # initializing yolov5 for face detection
-yolov5()
+
+# image_path = "data/test_img/many_people.jpg"
+# image = Image.open(image_path)
+# yolov5 = yolov5_FaceDetection(capture_index=-1, model_name='yolov5.pt',
+#                               image=image)  # initializing yolov5 for face detection
+# yolov5()
+
+
+def parse_opt(known=False):
+    # 创建解析器对象
+    parser = argparse.ArgumentParser()
+
+    # 添加命令行参数
+    parser.add_argument('--img_path', type=str, help='Your image path')
+    # parser.add_argument('--age', type=int, help='Your age')
+    parser.add_argument('--cap_index', type=int, help='Your camera index')
+    # parser.add_argument('--gender', choices=['male', 'female'], help='Your gender')
+
+    # 解析命令行参数
+    args = parser.parse_args()
+    return args
+
+def main(opt):
+    # image_path = "data/test_img/many_people.jpg"
+    image_path = opt.img_path
+    image = Image.open(image_path)
+    yolov5 = yolov5_FaceDetection(capture_index=opt.cap_index, model_name='yolov5.pt',
+                                  image=image)  # initializing yolov5 for face detection
+    yolov5()
+
+if __name__ == '__main__':
+    opt = parse_opt()
+    main(opt)
+
+'''
+命令行输入：
+    python face_detection.py --img_path '你所需识别的图片路径'
+    python face_detection.py --img_path 'data/test_img/many_people.jpg' --cap_index 0
+'''

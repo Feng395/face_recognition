@@ -1,6 +1,7 @@
 '''
 图片识别只识别置信度最高的那张人脸
 '''
+import argparse
 
 import torch
 from facenet_pytorch import MTCNN, InceptionResnetV1
@@ -41,7 +42,35 @@ def face_match(img_path, data_path):
     return (name_list[idx_min], min(dist_list), prob)
 
 
-img_path = 'data/test_img/many_people.jpg'
-result = face_match(img_path, 'data.pt')
+def parse_opt(known=False):
+    # 创建解析器对象
+    parser = argparse.ArgumentParser()
 
-print('脸部识别结果为: ', result[0], 'With distance: ', result[1], 'With 检测到人脸置信度: ', result[2])
+    # 添加命令行参数
+    parser.add_argument('--img_path', type=str, help='Your image path')
+    # parser.add_argument('--age', type=int, help='Your age')
+    # parser.add_argument('--gender', choices=['male', 'female'], help='Your gender')
+
+    # 解析命令行参数
+    args = parser.parse_args()
+    return args
+
+# img_path = 'data/test_img/many_people.jpg'
+# result = face_match(img_path, 'data.pt')
+#
+# print('脸部识别结果为: ', result[0], 'With distance: ', result[1], 'With 检测到人脸置信度: ', result[2])
+#
+
+def main(opt):
+    result = face_match(opt.img_path, 'data.pt')
+
+    print('脸部识别结果为: ', result[0], 'With distance: ', result[1], 'With 检测到人脸置信度: ', result[2])
+
+if __name__ == '__main__':
+    opt = parse_opt()
+    main(opt)
+
+'''
+命令行输入：
+    python detect_img_by_mtcnn.py --img_path '你所需识别的图片路径'
+'''
